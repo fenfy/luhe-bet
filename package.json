@@ -1,7 +1,7 @@
 {
   "name": "luhe-bet",
   "version": "0.1.0",
-  "description": "路合投注录入统计",
+  "description": "投注录入统计",
   "private": true,
   "type": "module",
   "scripts": {

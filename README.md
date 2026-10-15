@@ -1,4 +1,4 @@
-# luhe-bet 路合投注录入统计
+# luhe-bet 投注录入统计
 
 Vue 3 + JavaScript + Vite + Element Plus。录入员登录后录入投注，下方实时显示所选期的生肖、号码、色波投注统计。
 
@@ -21,7 +21,7 @@ yarn build      # 输出 dist/
 
 ## 环境变量
 
-默认值写在 `src/config.js`：标题「路合录入统计」，接口前缀开发 `/dev-api`、生产 `/prod-api`。需要修改时在项目根目录新建 `.env.development` / `.env.production`，覆盖 `VITE_APP_TITLE`、`VITE_APP_BASE_API`。
+默认值写在 `src/config.js`：标题「录入统计」，接口前缀开发 `/dev-api`、生产 `/prod-api`。需要修改时在项目根目录新建 `.env.development` / `.env.production`，覆盖 `VITE_APP_TITLE`、`VITE_APP_BASE_API`。
 
 ## 部署
 

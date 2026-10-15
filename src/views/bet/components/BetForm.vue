@@ -80,7 +80,7 @@
     <el-alert v-if="last" type="success" :closable="false" show-icon class="last">
       <template #title>
         <span>已录入第 {{ last.issueNo }} 期 {{ last.label }}：{{ last.items.join('、') }}，各 {{ formatMoney(last.amount) }} 元，共 {{ last.ids.length }} 笔</span>
-        <el-button link type="danger" class="ml10" :loading="undoing" @click="undo">撤销这次录入</el-button>
+        <el-button link type="danger" class="ml10" :loading="undoing" @click="undo">撤销此次录入</el-button>
       </template>
     </el-alert>
   </section>
