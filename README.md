@@ -33,3 +33,42 @@ yarn build      # 输出 dist/
 - 勾选「自动登录」：令牌存 localStorage，有效期 7 天，每天首次访问自动续期；不勾选：存 sessionStorage，30 分钟。
 - 统计口径：生肖、色波按投注项汇总笔数与金额；号码把所有投注（直接押号、生肖、色波）按每号金额摊到覆盖的号码上。
 - 录错时可撤销最近一次提交（只能撤销自己录入、未开奖的投注）；其他修改到 luhe-ui 后台处理。
+
+## 打包为 Windows 应用（Electron）
+
+```bash
+yarn            # 首次或依赖变化后
+yarn app:build  # 输出到 release/
+```
+
+产物（`release/` 目录）：
+
+- `luhe-bet-<版本>-setup.exe`：安装程序，可选安装目录，创建桌面和开始菜单快捷方式
+- `luhe-bet-<版本>-portable.exe`：免安装版，双击运行
+
+调试：`yarn app:dev`（先构建再用 Electron 打开）；或先 `yarn dev`，再设置 `ELECTRON_DEV_URL=http://localhost:81` 运行 `npx electron .`。
+
+### 后台地址
+
+首次启动时自动生成 `config.json`，默认连接本机 luhe-admin：
+
+```json
+{ "apiBaseUrl": "http://localhost:8060" }
+```
+
+- 安装版：在安装目录（默认 `%LOCALAPPDATA%\Programs\录入统计\`）
+- 免安装版：在 exe 同目录
+- 程序目录不可写时：`%APPDATA%\录入统计\config.json`
+
+改完重启应用生效。应用菜单（按 Alt 显示）→「帮助 → 后台地址…」可以查看当前地址、打开配置文件所在目录。
+桌面版的接口请求由 Electron 主进程转发到后台，不受浏览器跨域限制，后端无需额外配置。
+
+自动登录令牌保存在应用自己的数据目录中，卸载重装后需要重新登录。
+
+### 常见问题
+
+- 下载 Electron 很慢或失败：设置镜像后重新 `yarn`
+  `set ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`
+- 打包时下载 nsis / winCodeSign 失败：
+  `set ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/`
+- 报 `Cannot create symbolic link`：用管理员身份打开命令行再执行 `yarn app:build`，或在 Windows 设置里开启「开发人员模式」。
