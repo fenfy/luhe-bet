@@ -19,15 +19,19 @@
 
     <main class="content">
       <el-alert v-if="!canAdd" type="error" :closable="false" show-icon class="mb16" title="当前账号没有「投注新增」权限，请联系管理员分配「录入员」角色" />
-      <bet-form
-        v-if="canAdd"
-        v-model:issue-date="issueDate"
-        :issue-no="issueNo"
-        :options="options"
-        :drawn="!!stats.drawn"
-        @changed="loadStats"
-      />
-      <bet-stats :stats="stats" :issue-no="issueNo" :loading="statsLoading" class="mt16" @refresh="loadStats" />
+      <div class="workspace" :class="{ 'no-form': !canAdd }">
+        <!-- 左侧录入，滚动统计时保持可见 -->
+        <aside v-if="canAdd" class="left">
+          <bet-form
+            v-model:issue-date="issueDate"
+            :issue-no="issueNo"
+            :options="options"
+            :drawn="!!stats.drawn"
+            @changed="loadStats"
+          />
+        </aside>
+        <bet-stats :stats="stats" :issue-no="issueNo" :loading="statsLoading" class="right" @refresh="loadStats" />
+      </div>
     </main>
   </div>
 </template>
@@ -128,12 +132,35 @@ onMounted(async () => {
   outline: none;
 }
 .content {
-  max-width: 1280px;
+  max-width: 1680px;
   margin: 0 auto;
   padding: 16px 24px 32px;
 }
-.mt16 {
-  margin-top: 16px;
+.workspace {
+  display: grid;
+  grid-template-columns: 560px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  &.no-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.left {
+  position: sticky;
+  top: 68px;
+  max-height: calc(100vh - 84px);
+  overflow-y: auto;
+}
+/* 窄屏改为上下排列 */
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
 }
 .mb16 {
   margin-bottom: 16px;

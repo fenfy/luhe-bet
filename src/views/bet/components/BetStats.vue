@@ -159,7 +159,7 @@ h3 {
 }
 .zodiac-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
   .cell {
     display: grid;
@@ -180,7 +180,8 @@ h3 {
 }
 .number-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  /* 49 个号码排成 7 × 7 */
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
   .number {
     display: flex;
