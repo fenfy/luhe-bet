@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+import { APP_TITLE } from '@/config'
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { User, Lock } from '@element-plus/icons-vue'
@@ -34,7 +35,7 @@ const LAST_USER_KEY = 'Luhe-Bet-Username'
 
 const route = useRoute()
 const router = useRouter()
-const title = import.meta.env.VITE_APP_TITLE
+const title = APP_TITLE
 const loginRef = ref()
 const captchaRef = ref()
 const loading = ref(false)

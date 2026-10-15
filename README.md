@@ -19,6 +19,10 @@ yarn test       # 纯函数单元测试（node --test）
 yarn build      # 输出 dist/
 ```
 
+## 环境变量
+
+默认值写在 `src/config.js`：标题「路合录入统计」，接口前缀开发 `/dev-api`、生产 `/prod-api`。需要修改时在项目根目录新建 `.env.development` / `.env.production`，覆盖 `VITE_APP_TITLE`、`VITE_APP_BASE_API`。
+
 ## 部署
 
 `dist/` 为静态文件；使用 hash 路由，nginx 只需把 `/prod-api/` 反向代理到 luhe-admin（去掉前缀），与 luhe-ui 相同。

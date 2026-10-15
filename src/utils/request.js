@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { BASE_API } from '@/config'
 import { getToken, removeToken } from '@/utils/auth'
 
 const errorCode = {
@@ -10,7 +11,7 @@ const errorCode = {
 }
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: BASE_API,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' }
 })

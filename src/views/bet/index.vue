@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+import { APP_TITLE } from '@/config'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
@@ -45,7 +46,7 @@ import { issueOf, todayDate } from '@/utils/lotteryIssue'
 import { user, clearUser, hasPermi } from '@/utils/user'
 
 const router = useRouter()
-const title = import.meta.env.VITE_APP_TITLE
+const title = APP_TITLE
 
 const issueDate = ref(todayDate())
 const issueNo = computed(() => issueOf(issueDate.value))

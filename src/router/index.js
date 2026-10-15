@@ -1,3 +1,4 @@
+import { APP_TITLE } from '@/config'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { getToken } from '@/utils/auth'
 import { loadUser } from '@/utils/user'
@@ -15,7 +16,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async to => {
-  document.title = to.meta.title + ' - ' + import.meta.env.VITE_APP_TITLE
+  document.title = to.meta.title + ' - ' + APP_TITLE
   if (to.name === 'Login') {
     // 自动登录：本地令牌仍有效就直接进入
     return getToken() && (await loadUser()) ? { name: 'Bet' } : true

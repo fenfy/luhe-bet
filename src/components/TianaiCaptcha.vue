@@ -11,10 +11,11 @@
 // 用法：调用 show() 弹出验证码，验证通过后触发 success 事件，参数为验证码凭证（登录/注册时作为 uuid 提交）
 import { ref, nextTick, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
+import { BASE_API } from '@/config'
 
 const emit = defineEmits(['success', 'close'])
 
-const baseApi = import.meta.env.VITE_APP_BASE_API
+const baseApi = BASE_API
 // SDK 静态资源位于 public/tac 目录
 const assetBase = import.meta.env.BASE_URL + 'tac'
 const boxId = 'tac-box-' + Math.random().toString(36).slice(2, 10)
