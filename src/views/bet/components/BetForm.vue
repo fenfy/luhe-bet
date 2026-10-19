@@ -74,6 +74,8 @@
       <el-form-item>
         <el-button type="primary" :loading="submitting" @click="submit">确 定</el-button>
         <el-button @click="resetItems">重 置</el-button>
+        <!-- 已开奖时也能查看，所以不跟随表单禁用 -->
+        <el-button type="primary" plain :disabled="false" @click="todayOpen = true">今日投注</el-button>
       </el-form-item>
     </el-form>
 
@@ -83,6 +85,8 @@
         <el-button link type="danger" class="ml10" :loading="undoing" @click="undo">撤销此次录入</el-button>
       </template>
     </el-alert>
+
+    <today-bets v-model="todayOpen" :issue-date="issueDate" :issue-no="issueNo" :options="options" @changed="onRecordsChanged" />
   </section>
 </template>
 
@@ -90,6 +94,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import LotteryBall from '@/components/LotteryBall.vue'
+import TodayBets from './TodayBets.vue'
 import { addBetBatch, undoBets } from '@/api/bet'
 import { BET_TYPES, previewItems, formatMoney } from '@/utils/bet'
 
@@ -106,6 +111,15 @@ const submitting = ref(false)
 const undoing = ref(false)
 // 最近一次提交，用于撤销
 const last = ref(null)
+const todayOpen = ref(false)
+
+/** 在「今日投注」里改、删了记录：刷新统计；涉及最近一次录入的，撤销入口不再有效 */
+function onRecordsChanged(ids) {
+  if (last.value && ids.some(id => last.value.ids.includes(id))) {
+    last.value = null
+  }
+  emit('changed')
+}
 
 const form = reactive({ betType: '1', betItems: [], amount: undefined, remark: '' })
 const rules = {

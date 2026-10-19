@@ -19,3 +19,18 @@ export function addBetBatch(data) {
 export function undoBets(betIds) {
   return request({ url: '/lottery/bet/undo/' + betIds.join(','), method: 'delete' })
 }
+
+// 投注列表（分页；issueNo 可传期号或 YYYYMMDD 日期）
+export function listBet(query) {
+  return request({ url: '/lottery/bet/list', method: 'get', params: query })
+}
+
+// 修改投注（未开奖时）
+export function updateBet(data) {
+  return request({ url: '/lottery/bet', method: 'put', data })
+}
+
+// 删除投注（未开奖时）
+export function delBet(betIds) {
+  return request({ url: '/lottery/bet/' + [].concat(betIds).join(','), method: 'delete' })
+}
