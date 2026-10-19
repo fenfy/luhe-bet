@@ -40,7 +40,10 @@
         <lottery-ball :number="n.number" :wave="n.wave" size="small" />
         <span class="meta">
           <span class="count">{{ n.count }} 笔</span>
-          <span class="amount">{{ formatMoney(n.amount) }}</span>
+          <template v-if="n.amount > 0">
+            <span class="amount lose">-{{ formatMoney(n.amount * 47.5) }}</span>
+          </template>
+          <span v-else class="amount">+{{ formatMoney(stats.totalAmount || 0) }}</span>
         </span>
       </div>
     </div>
@@ -50,7 +53,7 @@
       <div v-for="w in stats.waves" :key="w.name" class="cell wave" :class="[waveClass(w.name), { empty: !w.count }]">
         <span class="name">{{ w.name }}</span>
         <span class="count">{{ w.count }} 笔</span>
-        <span class="amount">{{ formatMoney(w.amount) }}</span>
+        <span class="amount">{{ formatMoney(w.amount * 2.7) }}</span>
       </div>
     </div>
     <p class="legend"><span class="dot" />金额最高的前 3 项高亮显示</p>
@@ -197,6 +200,11 @@ h3 {
     line-height: 1.3;
     .amount {
       font-size: 13px;
+      color: #2f9e44;
+      font-weight: 600;
+      &.lose {
+        color: var(--bet-accent);
+      }
     }
   }
 }
