@@ -75,7 +75,7 @@
         <el-button type="primary" :loading="submitting" @click="submit">确 定</el-button>
         <el-button @click="resetItems">重 置</el-button>
         <!-- 已开奖时也能查看，所以不跟随表单禁用 -->
-        <el-button type="primary" plain :disabled="false" @click="todayOpen = true">今日投注</el-button>
+        <el-button type="primary" plain :disabled="false" class="today-btn" @click="todayOpen = true">今日投注</el-button>
       </el-form-item>
     </el-form>
 
@@ -265,6 +265,10 @@ function undo() {
 .preview-total {
   margin-top: 4px;
   font-weight: 600;
+}
+/* 今日投注按钮靠右 */
+.today-btn {
+  margin-left: auto;
 }
 .last {
   margin-bottom: 16px;

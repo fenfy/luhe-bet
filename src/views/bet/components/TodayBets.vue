@@ -6,7 +6,8 @@
     top="6vh"
     append-to-body
     @update:model-value="v => emit('update:modelValue', v)"
-    @open="reload"
+    @open="onOpen"
+    @closed="stopTimer"
   >
     <div class="toolbar">
       <el-radio-group v-model="query.betType" size="small" @change="reload">
@@ -16,7 +17,12 @@
       <span class="summary">共 {{ total }} 笔</span>
       <el-tag v-if="drawn" type="warning" size="small">已开奖，记录已锁定</el-tag>
       <span class="spacer" />
-      <el-button size="small" :icon="Refresh" @click="getList">刷新</el-button>
+      <span v-if="updatedAt" class="updated">更新于 {{ updatedAt }}</span>
+      <el-select v-model="autoRefresh" size="small" class="auto-refresh" @change="onIntervalChange">
+        <template #prefix>自动刷新</template>
+        <el-option v-for="o in REFRESH_OPTIONS" :key="o.value" :label="o.label" :value="o.value" />
+      </el-select>
+      <el-button size="small" :icon="Refresh" @click="getList()">刷新</el-button>
     </div>
 
     <el-table v-loading="loading" :data="rows" size="small" max-height="62vh" empty-text="本期暂无投注">
@@ -71,7 +77,7 @@
         small
         background
         hide-on-single-page
-        @current-change="getList"
+        @current-change="getList()"
         @size-change="reload"
       />
     </div>
@@ -129,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch, onBeforeUnmount } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 import LotteryBall from '@/components/LotteryBall.vue'
@@ -154,6 +160,19 @@ const rows = ref([])
 const total = ref(0)
 const query = reactive({ betType: '', pageNum: 1, pageSize: 20 })
 const drawn = computed(() => rows.value.some(r => r.drawn))
+const updatedAt = ref('')
+
+// 自动刷新：秒，0 为关闭；选择保存在本机
+const REFRESH_KEY = 'Luhe-Bet-AutoRefresh'
+const REFRESH_OPTIONS = [
+  { value: 0, label: '关闭' },
+  { value: 5, label: '5 秒' },
+  { value: 10, label: '10 秒' },
+  { value: 20, label: '20 秒' },
+  { value: 60, label: '60 秒' }
+]
+const autoRefresh = ref(loadInterval())
+let timer = null
 
 const editRef = ref()
 const edit = reactive({ open: false, saving: false, form: {} })
@@ -187,17 +206,72 @@ function timeOf(v) {
   return m ? m[1] : v
 }
 
-async function getList() {
-  loading.value = true
+function loadInterval() {
+  try {
+    const v = Number(localStorage.getItem(REFRESH_KEY))
+    if (REFRESH_OPTIONS.some(o => o.value === v) && localStorage.getItem(REFRESH_KEY) !== null) return v
+  } catch (e) {
+    // 浏览器禁用存储时用默认值
+  }
+  return 10
+}
+
+function startTimer() {
+  stopTimer()
+  if (autoRefresh.value > 0 && props.modelValue) {
+    timer = setInterval(tick, autoRefresh.value * 1000)
+  }
+}
+
+function stopTimer() {
+  if (timer) {
+    clearInterval(timer)
+    timer = null
+  }
+}
+
+/** 定时刷新：正在修改记录或上一次请求未完成时跳过，避免打断操作 */
+function tick() {
+  if (edit.open || loading.value) return
+  getList(true)
+}
+
+function onIntervalChange(v) {
+  try {
+    localStorage.setItem(REFRESH_KEY, String(v))
+  } catch (e) {
+    // 忽略
+  }
+  startTimer()
+}
+
+function onOpen() {
+  reload()
+  startTimer()
+}
+
+// 弹窗一关闭就停止定时刷新
+watch(() => props.modelValue, v => {
+  if (!v) stopTimer()
+})
+
+onBeforeUnmount(stopTimer)
+
+/** silent：后台刷新，不显示加载遮罩，出错也不清空当前列表 */
+async function getList(silent = false) {
+  if (!silent) loading.value = true
   try {
     const res = await listBet({ issueNo: props.issueDate, betType: query.betType || undefined, pageNum: query.pageNum, pageSize: query.pageSize })
     rows.value = res.rows || []
     total.value = res.total || 0
+    updatedAt.value = new Date().toTimeString().slice(0, 8)
   } catch (e) {
-    rows.value = []
-    total.value = 0
+    if (!silent) {
+      rows.value = []
+      total.value = 0
+    }
   } finally {
-    loading.value = false
+    if (!silent) loading.value = false
   }
 }
 
@@ -265,6 +339,13 @@ function remove(row) {
 }
 .spacer {
   flex: 1;
+}
+.updated {
+  font-size: 12px;
+  color: var(--bet-muted);
+}
+.auto-refresh {
+  width: 140px;
 }
 .item-text {
   font-weight: 600;
