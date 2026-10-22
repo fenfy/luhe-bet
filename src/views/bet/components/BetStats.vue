@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从高到低排列</small></h3>
+    <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从低到高排列</small></h3>
     <div class="number-grid">
       <div
         v-for="n in sortedNumbers"
@@ -37,9 +37,9 @@
         :class="{ hot: hotNumbers.has(n.number), empty: !n.count }"
         :title="n.zodiac + ' · ' + n.wave"
       >
-        <lottery-ball :number="n.number" :wave="n.wave" :label="n.zodiac" size="small" />
+        <lottery-ball :number="n.number" :wave="n.wave" size="small" />
         <span class="meta">
-          <span class="count">{{ n.count }} 笔</span>
+          <span class="count"><i class="zodiac">{{ n.zodiac }}</i> <b>{{n.count }}</b> 笔</span>
           <template v-if="n.amount > 0">
             <span class="amount lose">-{{ formatMoney(n.amount * 47.5) }}</span>
           </template>
@@ -56,7 +56,7 @@
         <span class="amount">{{ formatMoney(w.amount * 2.7) }}</span>
       </div>
     </div>
-    <p class="legend"><span class="dot" />金额最高的前 3 项高亮显示</p>
+    <p class="legend"><span class="dot" />金额最大的前 3 项高亮显示</p>
   </section>
 </template>
 
@@ -75,9 +75,9 @@ const emit = defineEmits(['refresh'])
 
 const hotZodiacs = computed(() => topKeys(props.stats.zodiacs || [], 'name'))
 const hotNumbers = computed(() => topKeys(props.stats.numbers || [], 'number'))
-// 号码按投注金额从高到低排列，金额相同按号码从小到大
+// 号码按投注金额从低到高排列，金额相同按号码从小到大
 const sortedNumbers = computed(() =>
-  [...(props.stats.numbers || [])].sort((a, b) => Number(b.amount) - Number(a.amount) || a.number.localeCompare(b.number))
+  [...(props.stats.numbers || [])].sort((a, b) => Number(a.amount) - Number(b.amount) || a.number.localeCompare(b.number))
 )
 
 function waveClass(name) {
@@ -148,7 +148,11 @@ h3 {
   .count {
     font-size: 12px;
     color: var(--bet-muted);
-  }
+    .zodiac {
+      font-size: 12px;
+      color: var(--bet-accent);
+    }
+   }
   .amount {
     font-weight: 600;
   }
