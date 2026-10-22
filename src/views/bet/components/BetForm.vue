@@ -38,6 +38,7 @@
             :number="n.number"
             :wave="n.wave"
             :title="n.zodiac + ' · ' + n.wave"
+            :label="n.zodiac"
             :selected="isPicked(n.number)"
             :clickable="!drawn"
             size="large"

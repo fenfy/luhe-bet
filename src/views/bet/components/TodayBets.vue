@@ -33,14 +33,14 @@
       </el-table-column>
       <el-table-column label="投注项" align="center" width="80">
         <template #default="{ row }">
-          <lottery-ball v-if="row.betType === '2'" :number="row.betItem" :wave="waveOf(row.betItem)" />
+          <lottery-ball v-if="row.betType === '2'" :number="row.betItem" :wave="waveOf(row.betItem)" :label="zodiacOf(row.betItem)" />
           <span v-else class="item-text">{{ row.betItem }}</span>
         </template>
       </el-table-column>
       <el-table-column label="号码" min-width="240">
         <template #default="{ row }">
           <template v-if="row.betType !== '2' && row.numbers">
-            <lottery-ball v-for="n in row.numbers.split(',')" :key="n" :number="n" :wave="waveOf(n)" size="small" />
+            <lottery-ball v-for="n in row.numbers.split(',')" :key="n" :number="n" :wave="waveOf(n)" :label="row.betType === '3' ? zodiacOf(n) : ''" size="small" />
           </template>
         </template>
       </el-table-column>
@@ -104,6 +104,7 @@
               :wave="n.wave"
               :title="n.zodiac + ' · ' + n.wave"
               :selected="edit.form.betItem === n.number"
+              :label="n.zodiac"
               clickable
               size="large"
               @click="pick(n.number)"
@@ -197,6 +198,12 @@ function betTypeTag(type) {
 function waveOf(number) {
   const n = props.options.numbers.find(x => x.number === number)
   return n ? n.wave : ''
+}
+
+/** 号码对应的生肖 */
+function zodiacOf(number) {
+  const n = props.options.numbers.find(x => x.number === number)
+  return n ? n.zodiac : ''
 }
 
 /** 录入时间只显示时分秒（同一期都是同一天） */

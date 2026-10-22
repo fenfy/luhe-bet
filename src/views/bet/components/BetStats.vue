@@ -37,7 +37,7 @@
         :class="{ hot: hotNumbers.has(n.number), empty: !n.count }"
         :title="n.zodiac + ' · ' + n.wave"
       >
-        <lottery-ball :number="n.number" :wave="n.wave" size="small" />
+        <lottery-ball :number="n.number" :wave="n.wave" :label="n.zodiac" size="small" />
         <span class="meta">
           <span class="count">{{ n.count }} 笔</span>
           <template v-if="n.amount > 0">
