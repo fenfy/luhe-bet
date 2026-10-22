@@ -28,10 +28,10 @@
       </div>
     </div>
 
-    <h3>号码 <small>含生肖、色波投注按每号金额摊入</small></h3>
+    <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从高到低排列</small></h3>
     <div class="number-grid">
       <div
-        v-for="n in stats.numbers"
+        v-for="n in sortedNumbers"
         :key="n.number"
         class="cell number"
         :class="{ hot: hotNumbers.has(n.number), empty: !n.count }"
@@ -75,6 +75,10 @@ const emit = defineEmits(['refresh'])
 
 const hotZodiacs = computed(() => topKeys(props.stats.zodiacs || [], 'name'))
 const hotNumbers = computed(() => topKeys(props.stats.numbers || [], 'number'))
+// 号码按投注金额从高到低排列，金额相同按号码从小到大
+const sortedNumbers = computed(() =>
+  [...(props.stats.numbers || [])].sort((a, b) => Number(b.amount) - Number(a.amount) || a.number.localeCompare(b.number))
+)
 
 function waveClass(name) {
   if (name.includes('红')) return 'red'
@@ -183,23 +187,32 @@ h3 {
 }
 .number-grid {
   display: grid;
-  /* 49 个号码排成 7 × 7 */
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  /* 按金额排序后不再固定 7 列：按宽度自动排列，每格至少放得下金额 */
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
   gap: 6px;
   .number {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px 4px 4px;
+    gap: 4px;
+    padding: 4px 6px 4px 2px;
   }
   .meta {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     line-height: 1.3;
+    .count,
     .amount {
-      font-size: 13px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .amount {
+      font-size: 12px;
+      letter-spacing: -0.2px;
       color: #2f9e44;
       font-weight: 600;
       &.lose {
