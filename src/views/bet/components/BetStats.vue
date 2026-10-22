@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从低到高排列</small></h3>
+    <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从高到低排列</small></h3>
     <div class="number-grid">
       <div
         v-for="n in sortedNumbers"
