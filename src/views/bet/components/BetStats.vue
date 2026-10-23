@@ -19,6 +19,7 @@
       </div>
     </div>
 
+    <!--生肖统计
     <h3>生肖 <small>按投注项汇总</small></h3>
     <div class="zodiac-grid">
       <div v-for="z in stats.zodiacs" :key="z.name" class="cell" :class="{ hot: hotZodiacs.has(z.name), empty: !z.count }">
@@ -27,6 +28,7 @@
         <span class="amount">{{ formatMoney(z.amount) }}</span>
       </div>
     </div>
+    -->
 
     <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从高到低排列</small></h3>
     <div class="number-grid">
@@ -47,7 +49,7 @@
         </span>
       </div>
     </div>
-
+    <!--色波统计
     <h3>色波 <small>按投注项汇总</small></h3>
     <div class="wave-grid">
       <div v-for="w in stats.waves" :key="w.name" class="cell wave" :class="[waveClass(w.name), { empty: !w.count }]">
@@ -56,6 +58,7 @@
         <span class="amount">{{ formatMoney(w.amount * 2.7) }}</span>
       </div>
     </div>
+    -->
     <p class="legend"><span class="dot" />金额最大的前 3 项高亮显示</p>
   </section>
 </template>
