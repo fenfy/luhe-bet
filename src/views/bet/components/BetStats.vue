@@ -19,7 +19,8 @@
       </div>
     </div>
 
-    <!--生肖统计
+    <template v-if="false">
+    <!--生肖统计-->
     <h3>生肖 <small>按投注项汇总</small></h3>
     <div class="zodiac-grid">
       <div v-for="z in stats.zodiacs" :key="z.name" class="cell" :class="{ hot: hotZodiacs.has(z.name), empty: !z.count }">
@@ -28,7 +29,7 @@
         <span class="amount">{{ formatMoney(z.amount) }}</span>
       </div>
     </div>
-    -->
+    </template>
 
     <h3>号码 <small>含生肖、色波投注按每号金额摊入，按金额从高到低排列</small></h3>
     <div class="number-grid">
@@ -39,9 +40,9 @@
         :class="{ hot: hotNumbers.has(n.number), empty: !n.count }"
         :title="n.zodiac + ' · ' + n.wave"
       >
-        <lottery-ball :number="n.number" :wave="n.wave" size="small" />
+        <lottery-ball :number="n.number" :wave="n.wave" />
         <span class="meta">
-          <span class="count"><i class="zodiac">{{ n.zodiac }}</i> <b>{{n.count }}</b> 笔</span>
+          <span class="count"><span class="zodiac">{{ n.zodiac }}</span> <b>{{n.count }}</b> 笔</span>
           <template v-if="n.amount > 0">
             <span class="amount lose">-{{ formatMoney(n.amount * 47.5) }}</span>
           </template>
@@ -49,7 +50,8 @@
         </span>
       </div>
     </div>
-    <!--色波统计
+
+    <template v-if="false">
     <h3>色波 <small>按投注项汇总</small></h3>
     <div class="wave-grid">
       <div v-for="w in stats.waves" :key="w.name" class="cell wave" :class="[waveClass(w.name), { empty: !w.count }]">
@@ -58,7 +60,8 @@
         <span class="amount">{{ formatMoney(w.amount * 2.7) }}</span>
       </div>
     </div>
-    -->
+    </template>
+
     <p class="legend"><span class="dot" />金额最大的前 3 项高亮显示</p>
   </section>
 </template>
@@ -123,7 +126,7 @@ function waveClass(name) {
   border-radius: 6px;
   background: #f7f8fa;
   .label {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--bet-muted);
   }
   .value {
@@ -195,13 +198,13 @@ h3 {
 .number-grid {
   display: grid;
   /* 按金额排序后不再固定 7 列：按宽度自动排列，每格至少放得下金额 */
-  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
   gap: 6px;
   .number {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 6px 4px 2px;
+    gap: 6px;
+    padding: 8px 10px 8px 6px;
   }
   .meta {
     flex: 1;
@@ -209,7 +212,6 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    line-height: 1.3;
     .count,
     .amount {
       max-width: 100%;
@@ -218,7 +220,7 @@ h3 {
       text-overflow: ellipsis;
     }
     .amount {
-      font-size: 12px;
+      font-size: 15px;
       letter-spacing: -0.2px;
       color: #2f9e44;
       font-weight: 600;
