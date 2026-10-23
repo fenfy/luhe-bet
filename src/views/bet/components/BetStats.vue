@@ -156,7 +156,7 @@ h3 {
     color: var(--bet-muted);
     .zodiac {
       font-size: 12px;
-      color: var(--bet-accent);
+      color: #1d1f1e;
     }
    }
   .amount {
